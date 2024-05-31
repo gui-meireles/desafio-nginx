@@ -11,7 +11,13 @@ services:
       - /usr/src/app/node_modules
     tty: true
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+#    healthcheck:                   # Fica testando se a porta 3000 está rodando
+#      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
 
   db:
     image: mysql:5.7
@@ -25,6 +31,11 @@ services:
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   nginx:
     build:
@@ -33,5 +44,7 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - db
-      - app
+      db:
+        condition: service_healthy
+#      app:
+#        condition: service_healthy
