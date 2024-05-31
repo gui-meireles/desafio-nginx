@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - ./node:/usr/src/app
+      - ./node:/usr/src/app  # Mapeia tudo o que estiver no diretório /node para a pasta /usr/src/app do container
       - /usr/src/app/node_modules
     tty: true
     depends_on:
